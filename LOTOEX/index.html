@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #cont {
+           display: flex;
+        }
+     
+        #grille {
+           width: 50%;
+        }
+     
+        #ctirage {
+           display: inline-block;
+        }
+     
+        #tirage {
+           height: 220px;
+           width: 50%;
+           text-align: right;
+        }
+     
+        #bon {
+           font: 72pt monospace;
+           margin: 30px auto;
+           text-align: center;
+           visibility: hidden;
+           background-color: #48C;
+           color: #FFF;
+           width: 120px;
+           height: 120px;
+           border-radius: 100px;
+           line-height: 120px;
+        }
+     
+        .bouton {
+           width: 26px;
+           height: 26px;
+           text-align: center;
+           font: 11pt monospace;
+           border: solid 1px #48C;
+           display: inline-flex;
+           align-items: center;
+           justify-content: center;
+           margin: 3px;
+           cursor: pointer;
+           transition: all 0.3s ease;
+        }
+     
+        .bouton:hover {
+           background-color: #48C;
+           color: #FFF;
+           transform: scale(1.4);
+        }
+     
+        .zbouton {
+           width: 26px;
+           height: 26px;
+           text-align: center;
+           font: 11pt monospace;
+           border: solid 1px #48C;
+           background-color: #F8F8F8;
+           display: inline-flex;
+           align-items: center;
+           justify-content: center;
+           margin: 3px;
+           color: #48C;
+        }
+     
+        .nbouton {
+           width: 26px;
+           height: 26px;
+           text-align: center;
+           font: 11pt monospace;
+           border: solid 1px #48C;
+           display: inline-flex;
+           align-items: center;
+           justify-content: center;
+           margin: 3px;
+           color: #000;
+        }
+     
+        button {
+           border: none;
+           cursor: pointer;
+           display: block;
+           width: 300px;
+           background-color: #48C;
+           padding: 10px;
+           font-size: 13pt;
+           color: #FFF;
+           text-decoration: none;
+           font-family: arial, sans-serif;
+           margin: 10px auto;
+           margin-bottom: 10px;
+        }
+     
+        button:hover {
+           opacity: 0.8;
+        }
+     </style>
+</head>
+<body>
+    <button onclick="init(this)">
+        Commencer la partie
+    </button>
+    <div id="cont">
+        <div id="grille"></div>
+        <div id="tirage">
+            <div id="ctirage">
+                <div id="choix"></div>
+                <div id="res"></div>
+                <div id="bon">0</div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function init(btn){
+            btn.style.display = "none";
+            i = 1;//initialisation du code 
+            nbr = 0;
+            choix = new Array();//variable qui met les choix directement dans un tableau (clique button 1 a 49 permet de les mettre dans un tableau)
+            creerGrille();
+        }
+        function creerGrille(){
+            t = setTimeout("creerGrille()", 50);//en js l'unite est en ms/setTimeout met du dynamisme(boucles a linfini)
+            bouton = document.createElement("div");//ajout de div avec bouton
+            bouton.className = "bouton";//bouton est un string/dans element il y'a des classe
+            bouton.innerHTML = i;//auto incrémentation du 1 au chiffre 49(ce que tu vois dans le navigateur)
+            bouton.setAttribute("id", i);//incrémentation pour devenir unique
+            bouton.onclick = function(){
+                ajouter(this);
+            }
+            document.getElementById("grille").appendChild(bouton);//coller direct a nos enfant(avec id bouton)pour etre dynamique
+            if(i % 7 == 0){
+                br = document.createElement("br");//faire un saut de ligne TOUT LES 7 BOUTON
+                document.getElementById("grille").appendChild(br);//coller le br a ton HTML grace a la div grille 
+            }
+            i += 1;
+            if(i > 49){
+                clearTimeout(t);
+            }
+        }
+        function ajouter(ob){
+            if(nbr < 6){
+                ob.style.visibility = "hidden";
+                nbouton = document.createElement("div");//meme chose partout dans la function ajouter / mais change l'attribue pour que tout bouton soit unique et separer les un des autres
+                nbouton.className = "nbouton";
+                nbouton.setAttribute("id", "ch", nbr);// id et ch reste fixe dans le html (identifiant unique sur chaque nombre) / nbr est dynamique change d'état a chaque passage sur la ligne
+                nbouton.innerHTML = ob.textContent;
+                document.getElementById("choix").appendChild(nbouton);
+                choix[nbr] = ob.firstChild.nodeValue;
+                nbr += 1;
+                if(nbr == 6){
+                    ztirage();
+                }
+            }
+        }
+        j = 0;
+        function ztirage(){
+            setTimeout("ztirage()", 100);
+            if(j < 6){
+                zbouton = document.createElement("div");
+                zbouton.className = "zbouton";
+                zbouton.innerHTML = 0;
+                zbouton.setAttribute("id", "res" +j);
+                document.getElementById("res").appendChild(zbouton);//zbouton variable / appenChild ajoute un élément a  l'enfant qui a l'id res
+                j += 1;//incrémente le j de ma condition (if)
+                if(j == 6){
+                    document.getElementById("bon").style.visibility = "visible";
+                    tirage();//lance la function tirage
+                }
+            }
+        }
+        index = 0;//initialise tout notre tirage 
+        rep = 0;//initialise nos réponse
+        tab = new Array();
+        itr = 50;//iteration de l'ensemble des cases du tableau (dire le nombre dans le tableau(toujours a - 1 pour aller a 49))
+        function tirage(){//creation de function tirage
+            tx = setTimeout("tirage()", 40);//fait defiler les different numero
+            rep += 1;//auto incrémentation
+            if(rep < itr){//si rep est inferieur a iteration alors 
+                for(k = index +1; k < 6; k++){//index index + 0 qui est en ligne 178(mais il commence a 0)alors / donc +1 ( index++/k++ = incrémentation)
+                    document.getElementById("res"  + k).innerHTML = math.ceil(math.ranDOM()*49);//affichage en HTML d'un nombre aléatoire
+                    v = math.ceil(math.random()*49);//definitin DOM / DOCUMENT OBJECT(objet)
+                    document.getElementById("res" + index).innerHTML = v;
+                    if(rep == itr - 1){
+                        if(tab.indexOf(v) == -1){
+                            tab[index] = v;//clée = [] / index est une clée
+                            for(k = 0; k < 6; k++){
+                                if(document.getElementById("ch" + k).firstChild.data == tab[index]){  
+                                    document.getElementById("ch" + k).style.backgroundColor = "#48c";
+                                    document.getElementById("res" + k).style.backgroundColor = "#48c";
+                                    document.getElementById("ch" + k).style.color = "#fff";
+                                    document.getElementById("res" + k).style.color = "#fff";
+                                    document.getElementById("bon").innerHTML = parseInt(document.getElementById("bon").textContent)+ 1;
+                                    
+                                }
+                            }
+                        }
+
+                    }else {
+                            rep = itr - 2;
+                }
+            }
+
+        } else {
+            rep = 0;
+            index += 1;
+            if(index == 6){//2 possibiliter d'utiliser le DOM / soit HTML deja crée / ou avoir que une balise et cree notre propre balise div
+                clearTimeout(tx);
+                return false;
+            }
+        }
+    }//declarer une variable/pas obliger de l'ecire tu peux mettre le NOM DE TA FUNCTION VARIABLE
+    </script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body id="baba">
+    <script>
+        const voir = new Date();
+        let heures = voir.getHours();
+        let minutes = voir.getMinutes();
+        let secondes = voir.getSeconds();
+        document.getElementById("baba").innerHTML = heures +":"+minutes  +":"+secondes;//aller dans le dom, recuperer l'id baba, inner.HTML afficher dans le document HTML les heures,minutes,secondes
+                                                                //quand je fais une chaine de caractere je ne peux pas faire une operationd d'une chaine de caractere 
+        //console.log(voir);
+
+
+
+    </script>
+</body>
+</html>
